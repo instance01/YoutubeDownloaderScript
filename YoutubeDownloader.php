@@ -1,10 +1,10 @@
 <?php
-echo("The source code of this script can be found <a href='https://github.com/instance01/YoutubeDownloaderScript/blob/master/YoutubeDownloader.php'> here </a>.<br><br>");
 if(!isset($_GET['v'])){
+	echo("The source code of this script can be found <a href='https://github.com/instance01/YoutubeDownloaderScript/blob/master/YoutubeDownloader.php'> here </a>.<br><br>");
 	echo("Usage: youtubedownloader.php?v=videoid<br>Videoid would be the red part: https://www.youtube.com/watch?v=<font color='red'>U8B8RkcF0Wc</font><br>Example: http://www.instancedev.com/youtubedl/YoutubeDownloader.php?v=U8B8RkcF0Wc");
 	exit;
 }
-echo("Don't close this website until the download is done!<br><br>");
+//echo("Don't close this website until the download is done!<br><br>");
 
 $videoid = $_GET['v'];
 
@@ -52,7 +52,7 @@ function getDownloadLink($videoid){
 		echo($type."<br>");
 	}
 	if(strrpos($type, "video") !== FALSE){
-		echo('<a href="'.$dlurl.'">Rightclick -> Download Target Under ..</a><br><br>');
+		//echo('<a href="'.$dlurl.'">Rightclick -> Download Target Under ..</a><br><br>');
 		forceDownload($dlurl, $filename);
 		return false;
 	} else { 
@@ -61,25 +61,25 @@ function getDownloadLink($videoid){
 }
 
 function forceDownload($url, $name) {
-    set_time_limit(0);
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $url);
-    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-    $r = curl_exec($ch);
-    curl_close($ch);
-    header('Expires: 0');
-    header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
-    header('Last-Modified: '.gmdate('D, d M Y H:i:s', time()).' GMT');
-    header('Cache-Control: private', false);
-    header('Content-Type: application/download');
-    header('Content-Disposition: attachment; filename="'.$name.'"');
-    header('Content-Transfer-Encoding: binary');
-    header('Content-Length: '.strlen($r));
-    header('Connection: close');
-    echo $r;
+	set_time_limit(0);
+	$ch = curl_init();
+	curl_setopt($ch, CURLOPT_URL, $url);
+	curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+	curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+	$r = curl_exec($ch);
+	curl_close($ch);
+	header('Expires: 0');
+	header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+	header('Last-Modified: '.gmdate('D, d M Y H:i:s', time()).' GMT');
+	header('Cache-Control: private', false);
+	header('Content-Type: application/force-download');
+	header('Content-Disposition: attachment; filename="'.$name.'"');
+	header('Content-Transfer-Encoding: binary');
+	header('Content-Length: '.strlen($r));
+	header('Connection: close');
+	echo $r;
 }
 
 
@@ -94,6 +94,7 @@ curl_close($ch_);
 fclose($fp);
 
 echo('<a href="'.$filename.'">Download</a>');*/
+
 $cont = TRUE;
 while($cont){
 	$cont = getDownloadLink($videoid);
