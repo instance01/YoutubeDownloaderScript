@@ -4,7 +4,6 @@ if(!isset($_GET['v'])){
 	echo("Usage: youtubedownloader.php?v=videoid<br>Videoid would be the red part: https://www.youtube.com/watch?v=<font color='red'>U8B8RkcF0Wc</font><br>Example: http://www.instancedev.com/youtubedl/YoutubeDownloader.php?v=U8B8RkcF0Wc");
 	exit;
 }
-//echo("Don't close this website until the download is done!<br><br>");
 
 $videoid = $_GET['v'];
 
@@ -18,7 +17,7 @@ function getDownloadLink($videoid){
 	parse_str($data, $params);
 	curl_close($ch);
 
-	$urlmap = urldecode($params['url_encoded_fmt_stream_map']);
+	$urlmap = urldecode(urldecode($params['url_encoded_fmt_stream_map']));
 	/*$index = strpos($urlmap, 'url=') + 4;
 	$dlurl = substr($urlmap, $index, strpos($urlmap, ';', $index) - $index);*/
 
@@ -37,23 +36,24 @@ function getDownloadLink($videoid){
 		}
 	}
 	
-	$filename = str_replace($invalid_filechars, '_', $params['title']).'.mp4';
-
-	if(isset($_GET['debug'])){
-		echo($filename.'<br><br>');
-		echo($dlurl.'<br><br>');
-	}
 	
-	//return $dlurl;
+	
 
 	$headers = get_headers($dlurl, 1);
 	$type = $headers["Content-Type"];
 	if(isset($_GET['debug'])){
 		echo($type."<br>");
 	}
+	
 	if(strrpos($type, "video") !== FALSE){
-		//echo('<a href="'.$dlurl.'">Rightclick -> Download Target Under ..</a><br><br>');
-		forceDownload($dlurl, $filename);
+		$filename = str_replace($invalid_filechars, '_', $params['title']).'.'.$filename .= substr($type, strpos($type, "/") + 1);;
+		if(isset($_GET['debug'])){
+			echo($filename.'<br><br>');
+			echo($dlurl.'<br><br>');
+			echo('<a href="'.$dlurl.'">Rightclick -> Download Target Under ..</a><br><br>');
+		} else {
+			forceDownload($dlurl, $filename);
+		}
 		return false;
 	} else { 
 		return true;
@@ -98,6 +98,7 @@ echo('<a href="'.$filename.'">Download</a>');*/
 $cont = TRUE;
 while($cont){
 	$cont = getDownloadLink($videoid);
+	sleep(1);
 }
 
 
