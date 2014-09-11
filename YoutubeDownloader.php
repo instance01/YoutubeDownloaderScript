@@ -1,7 +1,8 @@
 <?php
 if(!isset($_GET['v'])){
 	echo("The source code of this script can be found <a href='https://github.com/instance01/YoutubeDownloaderScript/blob/master/YoutubeDownloader.php'> here </a>.<br><br>");
-	echo("Usage: youtubedownloader.php?v=videoid<br>Videoid would be the red part: https://www.youtube.com/watch?v=<font color='red'>U8B8RkcF0Wc</font><br>Example: http://www.instancedev.com/youtubedl/YoutubeDownloader.php?v=U8B8RkcF0Wc");
+	echo("Usage: youtubedownloader.php?v=videoid<br><b>Videoid</b> would be the red part: https://www.youtube.com/watch?v=<font color='red'>U8B8RkcF0Wc</font><br>Example: <a href='http://www.instancedev.com/youtubedl/YoutubeDownloader.php?v=U8B8RkcF0W'>http://www.instancedev.com/youtubedl/YoutubeDownloader.php?v=U8B8RkcF0Wc</a><br><br>");
+	echo("Arguments:<br><b> &mp4=true </b> | Download in mp4 format only <br><b> &debug=true </b> | Print out debug info <br>Example: <a href='http://www.instancedev.com/youtubedl/YoutubeDownloader.php?v=U8B8RkcF0W&mp4=true'>http://www.instancedev.com/youtubedl/YoutubeDownloader.php?v=U8B8RkcF0Wc&mp4=true</a>");
 	exit;
 }
 
@@ -35,17 +36,20 @@ function getDownloadLink($videoid){
 			}
 		}
 	}
-	
-	
-	
+
 
 	$headers = get_headers($dlurl, 1);
 	$type = $headers["Content-Type"];
 	if(isset($_GET['debug'])){
 		echo($type."<br>");
 	}
-	
-	if(strrpos($type, "video") !== FALSE){
+
+	$valid_type = "video";
+	if(isset($_GET['mp4'])){
+		$valid_type = "video/mp4";
+	}
+
+	if(strrpos($type, $valid_type) !== FALSE){
 		$filename = str_replace($invalid_filechars, '_', $params['title']).'.'.$filename .= substr($type, strpos($type, "/") + 1);;
 		if(isset($_GET['debug'])){
 			echo($filename.'<br><br>');
@@ -82,26 +86,11 @@ function forceDownload($url, $name) {
 	echo $r;
 }
 
-
-/*set_time_limit(0);
-$fp = fopen (dirname(__FILE__).'/'.$filename, 'w+');
-$ch_ = curl_init($dlurl);
-curl_setopt($ch_, CURLOPT_TIMEOUT, 50);
-curl_setopt($ch_, CURLOPT_FILE, $fp);
-curl_setopt($ch_, CURLOPT_FOLLOWLOCATION, true);
-curl_exec($ch_);
-curl_close($ch_);
-fclose($fp);
-
-echo('<a href="'.$filename.'">Download</a>');*/
-
 $cont = TRUE;
 while($cont){
 	$cont = getDownloadLink($videoid);
-	sleep(1);
+	//sleep(1);
 }
 
-
 ?>
-
 
